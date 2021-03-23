@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t igotallday/client-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true igotallday/client-test npm run test 
+
+after_success:
+  - docker build -t igotallday/complex-client ./client
+  - docker build -t igotallday/complex-nginx ./nginx
+  - docker build -t igotallday/complex-server ./server
+  - docker build -t igotallday/complex-worker ./worker
+
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  - docker push igotallday/complex-client
+  - docker push igotallday/complex-nginx
+  - docker push igotallday/complex-server
+  - docker push igotallday/complex-worker
