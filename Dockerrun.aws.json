@@ -1,0 +1,35 @@
+{
+  "AWSEBockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "client",
+      "image": "igotallday/complex-client",
+      "hostname": "client",
+      "essential": false
+    },
+    {
+      "name": "server",
+      "image": "igotallday/complex-server",
+      "hostname": "api",
+      "essential": false
+    },
+    {
+      "name": "worker",
+      "image": "igotallday/complex-worker",
+      "hostname": "worker",
+      "essential": false
+    },
+    {
+      "name": "nginx",
+      "image": "igotallday/complex-nginx",
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80 
+        }
+      ],
+      "links": ["client", "server"]
+    }
+  ]
+}
